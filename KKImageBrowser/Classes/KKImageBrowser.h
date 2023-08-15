@@ -16,6 +16,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) NSArray <KKImageBrowserModel *> *images;
 @property (nonatomic, assign) NSInteger index;
 
++ (UIWindow *)mainWindow;
+
 @end
 
 NS_ASSUME_NONNULL_END

@@ -9,6 +9,7 @@
 #import "KKImageBrowserContainerView.h"
 #import "KKImageBrowserContainerCell.h"
 #import <SDWebImage/SDWebImage.h>
+#import "KKImageBrowser.h"
 
 @interface KKImageBrowserContainerView () <UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
 
@@ -17,7 +18,7 @@
 @property (nonatomic, strong) UIView *backgroundView;
 @property (nonatomic, strong) UIImageView *placeholderView;
 
-@property (nonatomic, assign) UIView *weakView;
+@property (nonatomic, assign) CGRect fromFrame;
 @property (nonatomic, assign) BOOL cacheStatusBarHidden;
 
 @end
@@ -66,13 +67,12 @@
     #pragma clang diagnostic pop
     self.placeholderView.hidden = NO;
     //
-    UIView *view = self.weakView;
-    UIWindow *window = [UIApplication sharedApplication].delegate.window;
+    UIWindow *window = [KKImageBrowser mainWindow];
     CGRect f1 = window.bounds;
-    CGRect f2 = [view convertRect:view.bounds toView:window];
-    if (view == nil) {
+    CGRect f2 = self.fromFrame;
+    if (CGRectEqualToRect(f2, CGRectZero)) {
         CGPoint point = window.center;
-        f2 = CGRectMake(point.x, point.y, 0, 0);
+        f2 = CGRectMake(point.x, point.y, 1, 1);
     }
     self.collectionView.alpha = 0;
     self.frame = f1;
@@ -105,8 +105,7 @@
     //
     NSInteger index = self.index;
     KKImageBrowserModel *cellModel = self.images[index];
-    UIView *view = cellModel.toView;
-    self.weakView = view;
+    self.fromFrame = cellModel.fromFrame;
     //设置占位图片
     if (cellModel.image) {
         [self.placeholderView setImage:cellModel.image];
@@ -115,9 +114,9 @@
         [self.placeholderView sd_setImageWithURL:cellModel.url placeholderImage:placeholderImage];
     }
     //
-    UIView *window = toView;
-    CGRect f1 = [view convertRect:view.bounds toView:window];
-    if (view == nil) {
+    UIView *window = [KKImageBrowser mainWindow];
+    CGRect f1 = self.fromFrame;
+    if (CGRectEqualToRect(f1, CGRectZero)) {
         CGPoint point = window.center;
         f1 = CGRectMake(point.x, point.y, 0, 0);
     }
@@ -201,7 +200,7 @@
     point.x += self.center.x;
     NSIndexPath *indexPath = [self.collectionView indexPathForItemAtPoint:point];
     KKImageBrowserModel *cellModel = self.images[indexPath.row];
-    self.weakView = cellModel.toView;
+    self.fromFrame = cellModel.fromFrame;
     //设置占位图片
     if (cellModel.image) {
         [self.placeholderView setImage:cellModel.image];

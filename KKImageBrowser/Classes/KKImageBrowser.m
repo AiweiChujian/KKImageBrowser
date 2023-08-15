@@ -19,6 +19,22 @@
 
 @implementation KKImageBrowser
 
++ (UIWindow *)mainWindow {
+    UIWindow *window = [UIApplication sharedApplication].delegate.window;
+    if (window != nil) {
+        return window;
+    }
+    if (@available(iOS 13.0, *)) {
+        NSSet *scenes = [UIApplication sharedApplication].connectedScenes;
+        for (scenes in scenes) {
+            if ([scenes isKindOfClass: UIWindowScene.class]) {
+                return ((UIWindowScene *)scenes).windows.firstObject;
+            }
+        }
+    }
+    return  nil;
+}
+
 - (instancetype)init {
     if (self = [super init]) {
         self.modalPresentationStyle = UIModalPresentationFullScreen;
@@ -31,7 +47,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     [self.view addSubview:self.bgImageView];
-    UIImage *bgImage = [UIApplication sharedApplication].keyWindow.screenshotsImage;
+    UIImage *bgImage = [KKImageBrowser mainWindow].screenshotsImage;
     self.bgImageView.image = bgImage;
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [self showImageBrowser];

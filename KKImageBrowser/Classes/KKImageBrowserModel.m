@@ -7,15 +7,20 @@
 //
 
 #import "KKImageBrowserModel.h"
+#import "KKImageBrowser.h"
 
 @implementation KKImageBrowserModel
 
-- (instancetype)initWithURL:(NSURL *)url toView:(UIView *)toView {
+- (instancetype)initWithURL:(NSURL *)url fromView:(UIView *)fromView {
     if (self = [self init]) {
         self.url = url;
-        self.toView = toView;
+        [self setFrameView: fromView];
     }
     return self;
+}
+
+- (void)setFrameView:(UIView *)fromView {
+    self.fromFrame = [fromView convertRect:fromView.bounds toView:[KKImageBrowser mainWindow]];
 }
 
 @end

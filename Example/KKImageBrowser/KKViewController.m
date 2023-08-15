@@ -115,7 +115,7 @@
         NSString *imageString = self.datum[i];
         NSIndexPath *index = [NSIndexPath indexPathForRow:i inSection:0];
         UICollectionViewCell *cell = [collectionView cellForItemAtIndexPath:index];
-        KKImageBrowserModel *model = [[KKImageBrowserModel alloc] initWithURL:[NSURL URLWithString:imageString] toView:cell];
+        KKImageBrowserModel *model = [[KKImageBrowserModel alloc] initWithURL:[NSURL URLWithString:imageString] fromView:cell];
         [images addObject:model];
     }
     KKImageBrowser *vc = [[KKImageBrowser alloc] init];
